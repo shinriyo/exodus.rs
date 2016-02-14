@@ -82,7 +82,7 @@ fn main() {
             } else if command_name == "init" || command_name == "initialie" {
                 println!("Initialize.");
                 println!("Add these settings in your [dependencies] of Cargo.toml.");
-                let raw = format!(r#"
+                println!(r#"
 [dependencies]
 nickel = "*"
 postgres = "0.11"
@@ -90,6 +90,11 @@ openssl = "*"
 rustc-serialize = "*"
 hyper = "*"
                 "#);
+                // 初期化処理
+                return;
+            } else if command_name == "migrate" {
+                println!("Migrate DB.");
+                return;
             } else {
                 println!("{} command not found.", command_name);
                 return;
