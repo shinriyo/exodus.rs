@@ -38,8 +38,10 @@ fn main() {
     }
 
     let args: Vec<_> = env::args().collect();
-    if args.len() <= 3 {
-        println!("Error.");
+
+    if args.len() <= 1 {
+        println!("Parameter not enough Error.");
+        // コンパイルの時もここを通るはず
         return;
     }
 
@@ -68,6 +70,7 @@ fn main() {
     */
     let mut arg_idx = 0;
     let args: Vec<String> = env::args().collect();
+    let args_len = args.len();
 
     for argument in args {
         if arg_idx == 0 {
@@ -78,6 +81,11 @@ fn main() {
             // "g" or "generate"
             command_name = argument.to_string();
             if command_name == "g" || command_name == "generate" {
+                if args_len <= 3 {
+                    println!("Parameter not enough Error.");
+                    return;
+                }
+
                 println!("Generate Scaffolding.");
             } else if command_name == "init" || command_name == "initialie" {
                 println!("Initialize.");
@@ -90,6 +98,33 @@ openssl = "*"
 rustc-serialize = "*"
 hyper = "*"
                 "#);
+
+                println!(r#"
+#[macro_use] extern crate nickel;
+
+extern crate postgres;
+extern crate openssl;
+extern crate hyper;
+use nickel::{{Nickel, StaticFilesHandler}};
+use postgres::{{Connection, SslMode}};
+use std::sync::{{Arc, Mutex}};
+
+extern crate rustc_serialize;
+
+// later you add module there!
+
+fn main() {{
+    let mut server = Nickel::new();
+    server.utilize(StaticFilesHandler::new("app/assets/"));
+
+    let mut router = Nickel::router();
+    let conn = Connection::connect("postgres://postgres@localhost", SslMode::None).unwrap();
+    let shared_connection = Arc::new(Mutex::new(conn));
+    // later you add scaffolding url there!
+
+    server.listen("localhost:6767");
+}}
+"#);
                 // 初期化処理
                 return;
             } else if command_name == "migrate" {
@@ -621,4 +656,5 @@ pub fn url(shared_connection: Arc<Mutex<Connection>>, router: &mut Router) {{
 
     println!("Success.");
     println!("You must add 'mod {};' in your src/main.rs.", name);
+    println!("And also add '{}::url(shared_connection.clone(), &mut router);' in your src/main.rs.", name);
 }

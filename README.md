@@ -15,9 +15,12 @@ src/main.rs
 argo.toml
 がいる
 
+# 最低限
+`brew install exodus.rs`
+
 # 予定コマンド
 
-## AngularやCSSなどのセット初期化※長いのでexoにするかも？
+## AngularやCSSなどのセット初期化
 ```
 exodus init
 ```
