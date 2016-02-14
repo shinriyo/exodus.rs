@@ -275,8 +275,7 @@ fn main() {{
 
     // 開始
     // フォルダ生成
-    let partials_path = format!("assets/{}/partials", name);
-    match fs::create_dir_all(partials_path) {
+    match fs::create_dir_all(format!("assets/{}/partials", name)) {
         Err(why) => println!("! {:?}", why.kind()),
         Ok(_) => {},
     }
@@ -332,15 +331,14 @@ fn main() {{
     /*
         js系
     */
-    let js_path = "assets/js";
-    match fs::create_dir_all(js_path) {
+    match fs::create_dir_all(format!("assets/{}/js", name)) {
         Err(why) => println!("! {:?}", why.kind()),
         Ok(_) => {},
     }
 
     // ファイル
     // app.js
-    let mut js_app_f = File::create(format!("{}/app.js", js_path)).unwrap();
+    let mut js_app_f = File::create(format!("assets/{}/js/app.js", name)).unwrap();
     let js_app_raw = format!(r#"angular.module('{0}App',['ui.router','ngResource','{0}App.controllers','{0}App.services']);
 angular.module('{0}App').config(function($stateProvider,$httpProvider){{
     $stateProvider.state('{0}s',{{
@@ -366,7 +364,7 @@ angular.module('{0}App').config(function($stateProvider,$httpProvider){{
 "#, name, capitalized_name);
     js_app_f.write_all(form_raw.as_bytes());
 
-    let mut js_controllers_f = File::create(format!("{}/controller.js", js_path)).unwrap();
+    let mut js_controllers_f = File::create(format!("assets/{}/js/controller.js", name)).unwrap();
     let js_controllers_raw = format!(r#"angular.module('{0}App.controllers',[]).controller('{1}ListController',function($scope,$state,popupService,$window,{1}){{
 
     $scope.{0}s={1}.query();
@@ -413,7 +411,7 @@ angular.module('{0}App').config(function($stateProvider,$httpProvider){{
 //    directives.js
 //    fixlters.js
 
-    let mut js_services_f = File::create(format!("{}/services.js", js_path)).unwrap();
+    let mut js_services_f = File::create(format!("assets/{}/js/services.js", name)).unwrap();
     let js_services_raw = format!(r#"angular.module('{0}App.services',[]).factory('{1}',function($resource){{
     return $resource('http://localhost:6767/api/{0}s/:id',{{id:'@_id'}},{{
         update: {{
