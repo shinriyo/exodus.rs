@@ -83,6 +83,12 @@ fn main() {
                 println!("Initialize.");
                 println!("Add these settings in your [dependencies] of Cargo.toml.");
                 let raw = format!(r#"
+[dependencies]
+nickel = "*"
+postgres = "0.11"
+openssl = "*"
+rustc-serialize = "*"
+hyper = "*"
                 "#);
             } else {
                 println!("{} command not found.", command_name);
