@@ -100,8 +100,7 @@ hyper = "*"
                 "#);
 
                 let mut main_f = File::create("src/main.rs").unwrap();
-                let main_raw = format!(r#"
-#[macro_use] extern crate nickel;
+                let main_raw = format!(r#"#[macro_use] extern crate nickel;
 
 extern crate postgres;
 extern crate openssl;
