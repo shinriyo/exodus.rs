@@ -57,7 +57,7 @@ fn main() {
     */
 
     // 後で変える名前
-    let mut name = "hoge".to_string();
+    let mut name = "item".to_string();
     let mut command_name = "g".to_string();
 
     // ハッシュ
@@ -275,7 +275,7 @@ fn main() {{
 
     // 開始
     // フォルダ生成
-    let partials_path = "assets/partials";
+    let partials_path = format!("assets/{}/partials", name);
     match fs::create_dir_all(partials_path) {
         Err(why) => println!("! {:?}", why.kind()),
         Ok(_) => {},
@@ -285,10 +285,9 @@ fn main() {{
         HTML系のファイルたち
     */
     // ファイル
-    // partials/_form.html
-    let mut form_f = File::create(format!("{}/{}_form.html", partials_path, name)).unwrap();
+    // item/partials/_form.html
+    let mut form_f = File::create(format!("assets/{0}/partials/{0}_form.html", name)).unwrap();
     let form_raw = format!(r#"{}
-
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
         <input type="submit" class="btn btn-primary" value="Save"/>
@@ -296,15 +295,15 @@ fn main() {{
 </div>"#, farm_html_as_str.iter().cloned().collect::<String>());
     form_f.write_all(form_raw.as_bytes());
 
-    // partials/hoge-add.html
-    let mut add_f = File::create(format!("{}/{}-add.html", partials_path, name)).unwrap();
+    // item/partials/hoge-add.html
+    let mut add_f = File::create(format!("assets/{0}/partials/{0}-add.html", name)).unwrap();
     let add_raw = format!(r#"<form class="form-horizontal" role="form" ng-submit="add{1}()">
     <div ng-include="'{}/partials/_form.html'"></div>
 </form>"#, name, capitalized_name);
     add_f.write_all(add_raw.as_bytes());
 
-    // partials/hoge-edit.html
-    let mut edit_f = File::create(format!("{}/{}-edit.html", partials_path, name)).unwrap();
+    // item/partials/hoge-edit.html
+    let mut edit_f = File::create(format!("assets/{0}/partials/{0}-edit.html", name)).unwrap();
     let add_raw = format!(r#"<form class="form-horizontal" role="form" ng-submit="update{1}()">
     <div ng-include="'{0}/partials/_form.html'"></div>
 </form>"#, name, capitalized_name);
@@ -312,7 +311,7 @@ fn main() {{
 
     // 複数形
     // まだ仮実装
-    let mut index_f = File::create(format!("{}/{}s.html", partials_path, name)).unwrap();
+    let mut index_f = File::create(format!("assets/{0}/partials/{0}s.html", name)).unwrap();
     let index_raw = format!(r#"<a ui-sref="new{1}" class="btn-primary btn-lg nodecoration">Add New {1}</a>
 <table class="table {0}table">
     <tr>

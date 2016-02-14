@@ -5,15 +5,18 @@ CRUDのScaffoldingを生成する
 npmを入れなくてもいいです。
 Rust + PostgreSQL + AngularJS
 
-## テンプレートはこのようになるようにしています
+## 生成されるテンプレートはこのようになるようにしています
 https://github.com/shinriyo/nickel-helloworld
+※ここにプルリクしてみたら今後変える予定です。
 
 # 最低限
 
 カレントディレクトリに　
+```
 src/main.rs
 argo.toml
-がいる
+```
+が必要
 
 # 最低限
 `brew install exodus.rs`
