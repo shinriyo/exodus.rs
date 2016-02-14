@@ -99,7 +99,8 @@ rustc-serialize = "*"
 hyper = "*"
                 "#);
 
-                println!(r#"
+                let mut main_f = File::create("src/main.rs").unwrap();
+                let main_raw = format!(r#"
 #[macro_use] extern crate nickel;
 
 extern crate postgres;
@@ -125,6 +126,9 @@ fn main() {{
     server.listen("localhost:6767");
 }}
 "#);
+                main_f.write_all(main_raw.as_bytes());
+                println!("Generated template in src/main.rs.");
+
                 // 初期化処理
                 return;
             } else if command_name == "migrate" {
