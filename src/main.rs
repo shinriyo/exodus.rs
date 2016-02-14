@@ -174,6 +174,9 @@ fn main() {{
     // struct
     let mut struct_as_str: Vec<String> = Vec::new();
 
+    // json to object
+    let mut json_to_obj_as_str: Vec<String> = Vec::new();
+
     let mut idx = 0;
 
     // key: column name
@@ -201,6 +204,8 @@ fn main() {{
         let val_type;
         // scaffolding → Rust Type
         let rest_type;
+        // json to obj用サポート
+        let support;
 
         let scaffoding_val = format!("{}", val);
 
@@ -208,18 +213,22 @@ fn main() {{
             "bool" => {
                 val_type = "BOOL";
                 rest_type = "bool";
+                support = "";
             }
             "integer" => {
                 val_type = "SMALLINT";
                 rest_type = "i16";
+                support = "";
             }
             "string" => {
                 val_type = "VARCHAR";
                 rest_type = "String";
+                support = ".to_string()";
             }
             _ => {
                 val_type = "VARCHAR";
                 rest_type = "String";
+                support = ".to_string()";
             }
         }
 
@@ -246,14 +255,17 @@ fn main() {{
         let raw = format!("{0}: {1}{2}", key, rest_type, comma);
         struct_as_str.push(raw);
 
+        // json to obj
+        // TODO:
+        let raw = format!("&{{0}}.{0}{1}{2}", key, support, comma);
+        json_to_obj_as_str.push(raw);
+
         idx += 1;
     }
 
     // CREATE TABLE
     let create_table_sql = format!("CREATE TABLE {0} (id SERIAL PRIMARY KEY, {1})",
         name, create_table_as_str.iter().cloned().collect::<String>());
-
-//    println!("{}", create_table_val_as_str.iter().cloned().collect::<String>());
 
     // SELECT ALL
     let select_sql = format!("SELECT {0} FROM {1} WHERE ", select_table_str.iter().cloned().collect::<String>(), name);
@@ -272,6 +284,15 @@ fn main() {{
 
     // struct
     let struct_params = format!("{}", struct_as_str.iter().cloned().collect::<String>());
+
+    // json to object用
+    let json_to_obj = format!("{}", json_to_obj_as_str.iter().cloned().collect::<String>());
+    /*
+        &{0}.title.to_string(),
+        &{0}.releaseYear,
+        &{0}.director.to_string(),
+        &{0}.genre.to_string()
+    */
 
     // 開始
     // フォルダ生成
@@ -556,10 +577,7 @@ pub fn url(shared_connection: Arc<Mutex<Connection>>, router: &mut Router) {{
 
         let {0} = request.json_as::<{1}>().unwrap();
         match stmt.execute(&[
-            &{0}.title.to_string(),
-            &{0}.releaseYear,
-            &{0}.director.to_string(),
-            &{0}.genre.to_string()
+            {8}
         ]) {{
             Ok(_) => {{
                 println!("Inserting {0} was Success.");
@@ -607,10 +625,7 @@ pub fn url(shared_connection: Arc<Mutex<Connection>>, router: &mut Router) {{
         // JSON to object
         let {0} = request.json_as::<{1}>().unwrap();
         match stmt.execute(&[
-            &{0}.title.to_string(),
-            &{0}.releaseYear,
-            &{0}.director.to_string(),
-            &{0}.genre.to_string(),
+            {8},
             &{0}._id
         ]) {{
             Ok(_) => {{
@@ -649,7 +664,7 @@ pub fn url(shared_connection: Arc<Mutex<Connection>>, router: &mut Router) {{
 }}
 "#,
     name, capitalized_name, sql_params, select_sql, insert_sql, update_sql,
-    create_table_sql, struct_params);
+    create_table_sql, struct_params, json_to_obj);
     let mut rust_f = File::create(format!("{}/mod.rs", &index_tpl_path)).unwrap();
     rust_f.write_all(rust_raw .as_bytes());
 

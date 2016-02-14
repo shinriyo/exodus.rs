@@ -7,6 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d415fb44-ef7e-4f21-ad3c-afe6e51d5ad3" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.rs" afterPath="$PROJECT_DIR$/src/main.rs" />
     </list>
     <ignored path="exodus.iws" />
@@ -41,8 +42,8 @@
       <file leaf-file-name="main.rs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.20520674">
-              <caret line="366" column="86" selection-start-line="366" selection-start-column="86" selection-end-line="366" selection-end-column="86" />
+            <state vertical-scroll-proportion="0.5132353">
+              <caret line="259" column="41" selection-start-line="259" selection-start-column="41" selection-end-line="259" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -97,8 +98,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="103" />
-    <option name="y" value="65" />
+    <option name="x" value="106" />
+    <option name="y" value="54" />
     <option name="width" value="1225" />
     <option name="height" value="777" />
   </component>
@@ -421,7 +422,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="103" y="65" width="1225" height="777" extended-state="0" />
+    <frame x="106" y="54" width="1225" height="777" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -573,8 +574,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20520674">
-          <caret line="366" column="86" selection-start-line="366" selection-start-column="86" selection-end-line="366" selection-end-column="86" />
+        <state vertical-scroll-proportion="0.5132353">
+          <caret line="259" column="41" selection-start-line="259" selection-start-column="41" selection-end-line="259" selection-end-column="41" />
           <folding />
         </state>
       </provider>
