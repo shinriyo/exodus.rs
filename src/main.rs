@@ -296,7 +296,7 @@ fn main() {{
 
     // 開始
     // フォルダ生成
-    match fs::create_dir_all(format!("assets/{}/partials", name)) {
+    match fs::create_dir_all(format!("app/assets/{}/partials", name)) {
         Err(why) => println!("! {:?}", why.kind()),
         Ok(_) => {},
     }
@@ -306,7 +306,7 @@ fn main() {{
     */
     // ファイル
     // item/partials/_form.html
-    let mut form_f = File::create(format!("assets/{0}/partials/{0}_form.html", name)).unwrap();
+    let mut form_f = File::create(format!("app/assets/{0}/partials/{0}_form.html", name)).unwrap();
     let form_raw = format!(r#"{}
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
@@ -316,14 +316,14 @@ fn main() {{
     form_f.write_all(form_raw.as_bytes());
 
     // item/partials/hoge-add.html
-    let mut add_f = File::create(format!("assets/{0}/partials/{0}-add.html", name)).unwrap();
+    let mut add_f = File::create(format!("app/assets/{0}/partials/{0}-add.html", name)).unwrap();
     let add_raw = format!(r#"<form class="form-horizontal" role="form" ng-submit="add{1}()">
     <div ng-include="'{}/partials/_form.html'"></div>
 </form>"#, name, capitalized_name);
     add_f.write_all(add_raw.as_bytes());
 
     // item/partials/hoge-edit.html
-    let mut edit_f = File::create(format!("assets/{0}/partials/{0}-edit.html", name)).unwrap();
+    let mut edit_f = File::create(format!("app/assets/{0}/partials/{0}-edit.html", name)).unwrap();
     let add_raw = format!(r#"<form class="form-horizontal" role="form" ng-submit="update{1}()">
     <div ng-include="'{0}/partials/_form.html'"></div>
 </form>"#, name, capitalized_name);
@@ -331,7 +331,7 @@ fn main() {{
 
     // 複数形
     // まだ仮実装
-    let mut index_f = File::create(format!("assets/{0}/partials/{0}s.html", name)).unwrap();
+    let mut index_f = File::create(format!("app/assets/{0}/partials/{0}s.html", name)).unwrap();
     let index_raw = format!(r#"<a ui-sref="new{1}" class="btn-primary btn-lg nodecoration">Add New {1}</a>
 <table class="table {0}table">
     <tr>
@@ -352,14 +352,14 @@ fn main() {{
     /*
         js系
     */
-    match fs::create_dir_all(format!("assets/{}/js", name)) {
+    match fs::create_dir_all(format!("app/assets/{}/js", name)) {
         Err(why) => println!("! {:?}", why.kind()),
         Ok(_) => {},
     }
 
     // ファイル
     // app.js
-    let mut js_app_f = File::create(format!("assets/{}/js/app.js", name)).unwrap();
+    let mut js_app_f = File::create(format!("app/assets/{}/js/app.js", name)).unwrap();
     let js_app_raw = format!(r#"angular.module('{0}App',['ui.router','ngResource','{0}App.controllers','{0}App.services']);
 angular.module('{0}App').config(function($stateProvider,$httpProvider){{
     $stateProvider.state('{0}s',{{
@@ -385,7 +385,7 @@ angular.module('{0}App').config(function($stateProvider,$httpProvider){{
 "#, name, capitalized_name);
     js_app_f.write_all(form_raw.as_bytes());
 
-    let mut js_controllers_f = File::create(format!("assets/{}/js/controller.js", name)).unwrap();
+    let mut js_controllers_f = File::create(format!("app/assets/{}/js/controller.js", name)).unwrap();
     let js_controllers_raw = format!(r#"angular.module('{0}App.controllers',[]).controller('{1}ListController',function($scope,$state,popupService,$window,{1}){{
 
     $scope.{0}s={1}.query();
@@ -432,7 +432,7 @@ angular.module('{0}App').config(function($stateProvider,$httpProvider){{
 //    directives.js
 //    fixlters.js
 
-    let mut js_services_f = File::create(format!("assets/{}/js/services.js", name)).unwrap();
+    let mut js_services_f = File::create(format!("app/assets/{}/js/services.js", name)).unwrap();
     let js_services_raw = format!(r#"angular.module('{0}App.services',[]).factory('{1}',function($resource){{
     return $resource('http://localhost:6767/api/{0}s/:id',{{id:'@_id'}},{{
         update: {{
@@ -448,7 +448,7 @@ angular.module('{0}App').config(function($stateProvider,$httpProvider){{
 
     // movie/views/index.tpl
     // フォルダ生成
-    let index_tpl_path = format!("{}/views", name);
+    let index_tpl_path = format!("app/{}/views", name);
     match fs::create_dir_all(&index_tpl_path) {
         Err(why) => println!("! {:?}", why.kind()),
         Ok(_) => {},
