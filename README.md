@@ -57,7 +57,7 @@ AngularJSではなくReactにします。
 
 自分メモ
 -------
-`cargo run`
+`cargo build`
 `target/debug/exodus`に生成される
 
 ```

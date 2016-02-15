@@ -257,8 +257,14 @@ fn main() {{
 
         // json to obj
         // TODO:
-        let raw = format!("&{{0}}.{0}{1}{2}", key, support, comma);
+        let raw = format!("&{0}.{1}{2}{3}", name, key, support, comma);
         json_to_obj_as_str.push(raw);
+    /*
+        &movie.title.to_string(),
+        &movie.releaseYear,
+        &movie.director.to_string(),
+        &movie.genre.to_string(),
+    */
 
         idx += 1;
     }
@@ -287,12 +293,6 @@ fn main() {{
 
     // json to object用
     let json_to_obj = format!("{}", json_to_obj_as_str.iter().cloned().collect::<String>());
-    /*
-        &{0}.title.to_string(),
-        &{0}.releaseYear,
-        &{0}.director.to_string(),
-        &{0}.genre.to_string()
-    */
 
     // 開始
     // フォルダ生成
@@ -450,6 +450,12 @@ angular.module('{0}App').config(function($stateProvider,$httpProvider){{
     // フォルダ生成
     let index_tpl_path = format!("{}/views", name);
     match fs::create_dir_all(&index_tpl_path) {
+        Err(why) => println!("! {:?}", why.kind()),
+        Ok(_) => {},
+    }
+
+    let module_path = format!("src/{}", name);
+    match fs::create_dir_all(&module_path) {
         Err(why) => println!("! {:?}", why.kind()),
         Ok(_) => {},
     }
@@ -665,7 +671,7 @@ pub fn url(shared_connection: Arc<Mutex<Connection>>, router: &mut Router) {{
 "#,
     name, capitalized_name, sql_params, select_sql, insert_sql, update_sql,
     create_table_sql, struct_params, json_to_obj);
-    let mut rust_f = File::create(format!("{}/mod.rs", &index_tpl_path)).unwrap();
+    let mut rust_f = File::create(format!("{}/mod.rs", &module_path)).unwrap();
     rust_f.write_all(rust_raw .as_bytes());
 
 
