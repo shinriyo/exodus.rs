@@ -4,3 +4,6 @@ version = "0.1.0"
 authors = ["shinriyo"]
 
 [dependencies]
+
+[dependencies.curl]
+git = "https://github.com/carllerche/curl-rust"

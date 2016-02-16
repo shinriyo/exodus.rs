@@ -1,3 +1,4 @@
+extern crate curl;
 use std::fs;
 use std::io::prelude::*;
 use std::fs::File;
@@ -6,6 +7,7 @@ use std::collections::HashMap;
 use std::mem;
 use std::fs::metadata;
 use std::path::Path;
+use curl::http;
 
 // 普通のstringをstaticに変換
 fn string_to_static_str(s: String) -> &'static str {
@@ -101,7 +103,6 @@ hyper = "*"
 
                 let mut main_f = File::create("src/main.rs").unwrap();
                 let main_raw = format!(r#"#[macro_use] extern crate nickel;
-
 extern crate postgres;
 extern crate openssl;
 extern crate hyper;
@@ -122,6 +123,7 @@ fn main() {{
     let shared_connection = Arc::new(Mutex::new(conn));
     // later you add scaffolding url there!
 
+    server.utilize(router);
     server.listen("localhost:6767");
 }}
 "#);
@@ -129,9 +131,26 @@ fn main() {{
                 println!("Generated template in src/main.rs.");
 
                 // 初期化処理
+                println!("Generated AngularJS libraries.");
+                let resp = http::handle()
+                .get("https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js")
+                .exec().unwrap();
+
+                let str_body = String::from_utf8(resp.get_body().to_vec()).unwrap();
+
+                // フォルダ生成
+                let path = "app/assets/lib";
+                match fs::create_dir_all(path) {
+                    Err(why) => println!("! {:?}", why.kind()),
+                    Ok(_) => {},
+                }
+
+                let mut rust_f = File::create("app/assets/lib/angular.min.js").unwrap();
+                rust_f.write_all(str_body.as_bytes());
                 return;
             } else if command_name == "migrate" {
                 println!("Migrate DB.");
+
                 return;
             } else {
                 println!("{} command not found.", command_name);
@@ -467,7 +486,7 @@ angular.module('{0}App').config(function($stateProvider,$httpProvider){{
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <base href="/"/>
+    <base href="/{0}_app"/>
     <title>The {1} App</title>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/app.css"/>
@@ -544,7 +563,7 @@ pub fn url(shared_connection: Arc<Mutex<Connection>>, router: &mut Router) {{
         }};
     }});
 
-    router.get("/", middleware! {{ |_, mut response|
+    router.get("/{0}_app", middleware! {{ |_, mut response|
         response.set(MediaType::Html);
         return response.send_file("app/{0}/views/index.tpl")
     }});
@@ -672,10 +691,10 @@ pub fn url(shared_connection: Arc<Mutex<Connection>>, router: &mut Router) {{
     name, capitalized_name, sql_params, select_sql, insert_sql, update_sql,
     create_table_sql, struct_params, json_to_obj);
     let mut rust_f = File::create(format!("{}/mod.rs", &module_path)).unwrap();
-    rust_f.write_all(rust_raw .as_bytes());
-
+    rust_f.write_all(rust_raw.as_bytes());
 
     println!("Success.");
     println!("You must add 'mod {};' in your src/main.rs.", name);
     println!("And also add '{}::url(shared_connection.clone(), &mut router);' in your src/main.rs.", name);
+    println!("later you can access to http://localhost:6767/{0}_app", name);
 }
