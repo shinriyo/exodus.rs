@@ -288,7 +288,7 @@ a.nodecoration{{
                 support = "";
             }
             "string" => {
-                val_type = "VARCHAR";
+                val_type = "VARCHAR(50)";
                 rest_type = "String";
                 support = ".to_string()";
             }
@@ -299,7 +299,7 @@ a.nodecoration{{
             }
         }
 
-        let raw = format!("{0} {1} (50) NOT NULL{2}",
+        let raw = format!("{0} {1} NOT NULL{2}",
             key, val_type, comma);
         create_table_as_str.push(raw);
 
