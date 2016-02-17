@@ -73,6 +73,8 @@ fn main() {
     let mut arg_idx = 0;
     let args: Vec<String> = env::args().collect();
     let args_len = args.len();
+    // indexのため
+    let mut first_column: String = String::from("!");
 
     for argument in args {
         if arg_idx == 0 {
@@ -215,6 +217,10 @@ hyper = "*"
 //            println!("model name: {}", name);
         } else {
             let d:Vec<_> = argument.split(':').collect();
+            if arg_idx == 3 {
+                first_column = d[0].to_string();
+            }
+
 //            println!("{}", d[0]);
             map.insert(d[0].to_string(), d[1].to_string());
         }
@@ -226,7 +232,10 @@ hyper = "*"
     let capitalized_name = format!("{}{}", &name[0..1].to_uppercase(), &name[1..name.len()]);
 
     // partials/_form.html用
-    let mut farm_html_as_str: Vec<String> = Vec::new();
+    let mut form_html_as_str: Vec<String> = Vec::new();
+
+    // partials/hoge-view.html用
+    let mut view_html_as_str: Vec<String> = Vec::new();
 
     // CREATE TABLE
     let mut create_table_as_str: Vec<String> = Vec::new();
@@ -251,9 +260,11 @@ hyper = "*"
     let mut idx = 0;
 
     // key: column name
+    // val: type
     // おそらく&&str
     for (key, val) in &map {
-        let capitalized_val = format!("{}{}", &key[0..1].to_uppercase(), &key[1..key.len()]);
+        let capitalized_key = format!("{}{}", &key[0..1].to_uppercase(), &key[1..key.len()]);
+        // _form
         let raw = format!(r#"
 <div class="form-group">
     <label for="{1}" class="col-sm-2 control-label">{2}</label>
@@ -261,8 +272,16 @@ hyper = "*"
         <input type="text" ng-model="{0}.{1}" class="form-control" id="{1}" placeholder="{0}'s {2}"/>
     </div>
 </div>
-"#, name, key, capitalized_val);
-        farm_html_as_str.push(raw);
+"#, name, key, capitalized_key);
+        form_html_as_str.push(raw);
+
+        // hoge-view
+        let raw = format!(r#"
+    <tr>
+        <td>{1} {3}</td>
+        <td>{{{{{0}.{2}}}}}</td>
+    </tr>"#, name, capitalized_name, key, capitalized_key);
+        view_html_as_str.push(raw);
 
         let mut comma = ", ";
         if (map.len() - 1) == idx {
@@ -376,48 +395,64 @@ hyper = "*"
     */
     // ファイル
     // item/partials/_form.html
-    let mut form_f = File::create(format!("app/assets/{0}/partials/_form.html", name)).unwrap();
-    let form_raw = format!(r#"{}
+    let mut html_f = File::create(format!("app/assets/{0}/partials/_form.html", name)).unwrap();
+    let html_raw = format!(r#"{}
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
         <input type="submit" class="btn btn-primary" value="Save"/>
     </div>
-</div>"#, farm_html_as_str.iter().cloned().collect::<String>());
-    form_f.write_all(form_raw.as_bytes());
+</div>
+"#, form_html_as_str.iter().cloned().collect::<String>());
+    html_f.write_all(html_raw.as_bytes());
+
+    // item/partials/hoge-view.html
+    let mut html_f = File::create(format!("app/assets/{0}/partials/{0}-view.html", name)).unwrap();
+    let html_raw = format!(r#"<table class="table {0}table">
+    <tr>
+        <td><h3>Details for {{{{{0}.{3}}}}}</h3></td>
+        <td></td>
+    </tr>
+    {2}
+</table>
+<div>
+    <a class="btn btn-primary" ui-sref="edit{1}({{id:{0}._id}})">Edit</a>
+</div>
+"#, name, capitalized_name, view_html_as_str.iter().cloned().collect::<String>(), first_column);
+    html_f.write_all(html_raw.as_bytes());
 
     // item/partials/hoge-add.html
     let mut add_f = File::create(format!("app/assets/{0}/partials/{0}-add.html", name)).unwrap();
-    let add_raw = format!(r#"<form class="form-horizontal" role="form" ng-submit="add{1}()">
+    let html_raw = format!(r#"<form class="form-horizontal" role="form" ng-submit="add{1}()">
     <div ng-include="'{}/partials/_form.html'"></div>
 </form>"#, name, capitalized_name);
-    add_f.write_all(add_raw.as_bytes());
+    add_f.write_all(html_raw.as_bytes());
 
     // item/partials/hoge-edit.html
-    let mut edit_f = File::create(format!("app/assets/{0}/partials/{0}-edit.html", name)).unwrap();
-    let add_raw = format!(r#"<form class="form-horizontal" role="form" ng-submit="update{1}()">
+    let mut html_f = File::create(format!("app/assets/{0}/partials/{0}-edit.html", name)).unwrap();
+    let html_raw = format!(r#"<form class="form-horizontal" role="form" ng-submit="update{1}()">
     <div ng-include="'{0}/partials/_form.html'"></div>
 </form>"#, name, capitalized_name);
-    edit_f.write_all(add_raw.as_bytes());
+    html_f.write_all(html_raw.as_bytes());
 
     // 複数形
     // まだ仮実装
-    let mut index_f = File::create(format!("app/assets/{0}/partials/{0}s.html", name)).unwrap();
-    let index_raw = format!(r#"<a ui-sref="new{1}" class="btn-primary btn-lg nodecoration">Add New {1}</a>
+    let mut html_f = File::create(format!("app/assets/{0}/partials/{0}s.html", name)).unwrap();
+    let html_raw = format!(r#"<a ui-sref="new{1}" class="btn-primary btn-lg nodecoration">Add New {1}</a>
 <table class="table {0}table">
     <tr>
         <td><h3>All {1}s</h3></td>
         <td></td>
     </tr>
     <tr ng-repeat="{0} in {0}s">
-        <td>{{{{{0}.title}}}}</td>
+        <td>{{{{{0}.{2}}}}}</td>
         <td>
             <a class="btn btn-primary" ui-sref="view{1}({{id:{0}._id}})">View</a>
             <a class="btn btn-danger"  ng-click="delete{1}({0})">Delete</a>
         </td>
     </tr>
 </table>
-"#, name, capitalized_name);
-    index_f.write_all(index_raw.as_bytes());
+"#, name, capitalized_name, first_column);
+    html_f.write_all(html_raw.as_bytes());
 
     /*
         js系
