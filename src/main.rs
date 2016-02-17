@@ -155,7 +155,8 @@ fn main() {{
 
                 // route
                 let resp = http::handle()
-                .get("https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-route.min.js")
+//                .get("https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-route.min.js")
+                .get("https://cdn.rawgit.com/angular-ui/ui-router/0.2.18/release/angular-ui-router.min.js")
                 .exec().unwrap();
                 let str_body = String::from_utf8(resp.get_body().to_vec()).unwrap();
                 let mut js_f = File::create("app/assets/lib/angular-ui-router.min.js").unwrap();
@@ -249,9 +250,8 @@ a.nodecoration{{
     // key: column name
     // おそらく&&str
     for (key, val) in &map {
-        let capitalized_val = format!("{}{}", &name[0..1].to_uppercase(), &name[1..name.len()]);
+        let capitalized_val = format!("{}{}", &key[0..1].to_uppercase(), &key[1..key.len()]);
         let raw = format!(r#"
-<div class="form-group">
 <div class="form-group">
     <label for="{1}" class="col-sm-2 control-label">{2}</label>
     <div class="col-sm-10">
@@ -293,7 +293,7 @@ a.nodecoration{{
                 support = ".to_string()";
             }
             _ => {
-                val_type = "VARCHAR";
+                val_type = "VARCHAR(50)";
                 rest_type = "String";
                 support = ".to_string()";
             }
@@ -341,7 +341,7 @@ a.nodecoration{{
         name, create_table_as_str.iter().cloned().collect::<String>());
 
     // SELECT ALL
-    let select_sql = format!("SELECT {0} FROM {1} WHERE ", select_table_str.iter().cloned().collect::<String>(), name);
+    let select_sql = format!("SELECT {0} FROM {1}", select_table_str.iter().cloned().collect::<String>(), name);
 
     // INSERT
     let insert_sql = format!("INSERT INTO {1} ({0}) VALUES ({2})", select_table_str.iter().cloned().collect::<String>(),
@@ -503,9 +503,6 @@ angular.module('{0}App').config(function($stateProvider,$httpProvider){{
 }});
 "#, name, capitalized_name);
     js_controllers_f.write_all(js_controllers_raw.as_bytes());
-
-//    directives.js
-//    fixlters.js
 
     let mut js_services_f = File::create(format!("app/assets/{}/js/services.js", name)).unwrap();
     let js_services_raw = format!(r#"angular.module('{0}App.services',[]).factory('{1}',function($resource){{
