@@ -373,7 +373,7 @@ a.nodecoration{{
     */
     // ファイル
     // item/partials/_form.html
-    let mut form_f = File::create(format!("app/assets/{0}/partials/{0}_form.html", name)).unwrap();
+    let mut form_f = File::create(format!("app/assets/{0}/partials/_form.html", name)).unwrap();
     let form_raw = format!(r#"{}
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
