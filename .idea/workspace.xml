@@ -41,8 +41,8 @@
       <file leaf-file-name="main.rs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.44838214">
-              <caret line="295" column="38" selection-start-line="295" selection-start-column="38" selection-end-line="295" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.26348227">
+              <caret line="411" column="26" selection-start-line="411" selection-start-column="26" selection-end-line="411" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -78,8 +78,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="82" />
-    <option name="y" value="59" />
+    <option name="x" value="187" />
+    <option name="y" value="77" />
     <option name="width" value="1225" />
     <option name="height" value="773" />
   </component>
@@ -402,7 +402,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="82" y="59" width="1225" height="773" extended-state="0" />
+    <frame x="187" y="77" width="1225" height="773" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -554,8 +554,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44838214">
-          <caret line="295" column="38" selection-start-line="295" selection-start-column="38" selection-end-line="295" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.26348227">
+          <caret line="411" column="26" selection-start-line="411" selection-start-column="26" selection-end-line="411" selection-end-column="26" />
           <folding />
         </state>
       </provider>

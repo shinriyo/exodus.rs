@@ -84,23 +84,14 @@ fn main() {
             command_name = argument.to_string();
             if command_name == "g" || command_name == "generate" {
                 if args_len <= 3 {
-                    println!("Parameter not enough Error.");
+                    println!("[Err] Argument aren't enough.");
+                    println!("Remember the arguments, to keep more than 3 argments.");
                     return;
                 }
 
-                println!("Generate Scaffolding.");
+                println!("Generate Scaffolding....");
             } else if command_name == "init" || command_name == "initialie" {
-                println!("Initialize.");
-                println!("Add these settings in your [dependencies] of Cargo.toml.");
-                println!(r#"
-[dependencies]
-nickel = "*"
-postgres = "0.11"
-openssl = "*"
-rustc-serialize = "*"
-hyper = "*"
-                "#);
-
+                println!("Initialize....");
                 let mut main_f = File::create("src/main.rs").unwrap();
                 let main_raw = format!(r#"#[macro_use] extern crate nickel;
 extern crate postgres;
@@ -172,20 +163,20 @@ fn main() {{
 
                 // CSS
                 let mut css_f = File::create("app/assets/css/app.css").unwrap();
-                let css_raw = r#".top-buffer{{
+                let css_raw = r#".top-buffer{
     margin-top:10px;
-}}
+}
 
-.movietable tr td:nth-child(2){{
+.movietable tr td:nth-child(2){
     width: 150px;
-}}
+}
 
-.movietable tr:nth-child(1) td{{
+.movietable tr:nth-child(1) td{
     border-top: none;
-}}
-a.nodecoration{{
+}
+a.nodecoration{
     text-decoration:none;
-}}
+}
 "#;
                 css_f.write_all(css_raw.as_bytes());
 
@@ -196,6 +187,18 @@ a.nodecoration{{
 
                 let mut css_f = File::create("app/assets/css/bootstrap.min.css").unwrap();
                 css_f.write_all(str_body.as_bytes());
+
+                println!("Finish initialize.");
+                println!("You shall take [dependencies] of the Cargo.toml your project.");
+                println!(r#"
+[dependencies]
+nickel = "*"
+postgres = "0.11"
+openssl = "*"
+rustc-serialize = "*"
+hyper = "*"
+                "#);
+
                 return;
             } else if command_name == "migrate" {
                 println!("Migrate DB.");
@@ -341,7 +344,7 @@ a.nodecoration{{
         name, create_table_as_str.iter().cloned().collect::<String>());
 
     // SELECT ALL
-    let select_sql = format!("SELECT {0} FROM {1}", select_table_str.iter().cloned().collect::<String>(), name);
+    let select_sql = format!("SELECT id, {0} FROM {1}", select_table_str.iter().cloned().collect::<String>(), name);
 
     // INSERT
     let insert_sql = format!("INSERT INTO {1} ({0}) VALUES ({2})", select_table_str.iter().cloned().collect::<String>(),
@@ -406,7 +409,7 @@ a.nodecoration{{
         <td></td>
     </tr>
     <tr ng-repeat="{0} in {0}s">
-        <td>{{{0}.title}}</td>
+        <td>{{{{{0}.title}}}}</td>
         <td>
             <a class="btn btn-primary" ui-sref="view{1}({{id:{0}._id}})">View</a>
             <a class="btn btn-danger"  ng-click="delete{1}({0})">Delete</a>
@@ -746,9 +749,9 @@ pub fn url(shared_connection: Arc<Mutex<Connection>>, router: &mut Router) {{
     let mut rust_f = File::create(format!("{}/mod.rs", &module_path)).unwrap();
     rust_f.write_all(rust_raw.as_bytes());
 
-    println!("Success.");
-    println!("You must add 'mod {};' in your src/main.rs.", name);
-    println!("And also add '{}::url(shared_connection.clone(), &mut router);' in your src/main.rs.", name);
-    println!("Run 'cargo run' command.");
-    println!("later you can access to http://localhost:6767/{0}_app", name);
+    println!("[Success] Scaffolding.");
+    println!("You shall add 'mod {};' against your src/main.rs.", name);
+    println!("You shall add '{}::url(shared_connection.clone(), &mut router);' against your src/main.rs.", name);
+    println!("Run 'cargo run' commandment.");
+    println!("You shall access to http://localhost:6767/{0}_app", name);
 }
