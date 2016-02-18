@@ -7,7 +7,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d415fb44-ef7e-4f21-ad3c-afe6e51d5ad3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.rs" afterPath="$PROJECT_DIR$/src/main.rs" />
     </list>
     <ignored path="exodus.iws" />
@@ -42,8 +41,8 @@
       <file leaf-file-name="main.rs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.rs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.4191064">
-              <caret line="305" column="38" selection-start-line="305" selection-start-column="29" selection-end-line="305" selection-end-column="39" />
+            <state vertical-scroll-proportion="0.8412943">
+              <caret line="291" column="40" selection-start-line="291" selection-start-column="40" selection-end-line="291" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -578,8 +577,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.rs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.4191064">
-          <caret line="305" column="38" selection-start-line="305" selection-start-column="29" selection-end-line="305" selection-end-column="39" />
+        <state vertical-scroll-proportion="0.8412943">
+          <caret line="291" column="40" selection-start-line="291" selection-start-column="40" selection-end-line="291" selection-end-column="40" />
           <folding />
         </state>
       </provider>

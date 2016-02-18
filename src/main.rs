@@ -62,16 +62,9 @@ fn main() {
     let mut name = "item".to_string();
     let mut command_name = "g".to_string();
 
-    // ハッシュ
-//    let mut map = HashMap::new();
     let mut column_stack = Vec::new();
     let mut type_stack = Vec::new();
-    /*
-    map.insert("title", "string");
-    map.insert("release_year", "integer");
-    map.insert("genre", "string");
-    map.insert("director", "string");
-    */
+
     let mut arg_idx = 0;
     let args: Vec<String> = env::args().collect();
     let args_len = args.len();
@@ -224,7 +217,6 @@ hyper = "*"
             }
 
 //            println!("{}", d[0]);
-//            map.insert(d[0].to_string(), d[1].to_string());
             column_stack.push(d[0].to_string());
             type_stack.push(d[1].to_string());
         }
@@ -263,12 +255,7 @@ hyper = "*"
 
     let mut idx = 0;
 
-    // key: column name
-    // val: type
-    // おそらく&&str
-//    for (key, val) in &map {
     for column in &column_stack {
-//        let capitalized_key = format!("{}{}", &key[0..1].to_uppercase(), &key[1..key.len()]);
         let capitalized_column = format!("{}{}", &column[0..1].to_uppercase(), &column[1..column.len()]);
         // _form
         let raw = format!(r#"
@@ -296,40 +283,39 @@ hyper = "*"
 
         // CREATE TABLE
         // scaffolding → Postgres Type
-        let val_type;
+        let db_column_type;
         // scaffolding → Rust Type
         let rest_type;
         // json to obj用サポート
         let support;
 
-//        let scaffoding_val = format!("{}", val);
-        let scaffoding_val = type_stack.pop().unwrap();
+        let scaffoding_type = type_stack.pop().unwrap();
 
-        match (string_to_static_str(scaffoding_val)) {
+        match (string_to_static_str(scaffoding_type)) {
             "bool" => {
-                val_type = "BOOL";
+                db_column_type = "BOOL";
                 rest_type = "bool";
                 support = "";
             }
             "integer" => {
-                val_type = "SMALLINT";
+                db_column_type = "SMALLINT";
                 rest_type = "i16";
                 support = "";
             }
             "string" => {
-                val_type = "VARCHAR(50)";
+                db_column_type = "VARCHAR(50)";
                 rest_type = "String";
                 support = ".to_string()";
             }
             _ => {
-                val_type = "VARCHAR(50)";
+                db_column_type = "VARCHAR(50)";
                 rest_type = "String";
                 support = ".to_string()";
             }
         }
 
         let raw = format!("{0} {1} NOT NULL{2}",
-        column, val_type, comma);
+        column, db_column_type, comma);
         create_table_as_str.push(raw);
 
         let raw = format!("${0}{1}", idx+1, comma);
@@ -355,12 +341,6 @@ hyper = "*"
         // TODO:
         let raw = format!("&{0}.{1}{2}{3}", name, column, support, comma);
         json_to_obj_as_str.push(raw);
-    /*
-        &movie.title.to_string(),
-        &movie.releaseYear,
-        &movie.director.to_string(),
-        &movie.genre.to_string(),
-    */
 
         idx += 1;
     }

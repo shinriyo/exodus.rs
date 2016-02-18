@@ -65,6 +65,7 @@ AngularJSではなくReactにします。
 `cargo build`
 `target/debug/exodus`に生成される
 
+## 公開用
 ```
-cp target/debug/exodus ~/hoge
+cp target/debug/exodus bin
 ```
