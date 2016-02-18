@@ -6,9 +6,7 @@
     </option>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d415fb44-ef7e-4f21-ad3c-afe6e51d5ad3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.rs" afterPath="$PROJECT_DIR$/src/main.rs" />
-    </list>
+    <list default="true" id="d415fb44-ef7e-4f21-ad3c-afe6e51d5ad3" name="Default" comment="" />
     <ignored path="exodus.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

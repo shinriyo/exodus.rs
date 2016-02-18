@@ -69,3 +69,8 @@ AngularJSではなくReactにします。
 ```
 cp target/debug/exodus bin
 ```
+
+https://raw.githubusercontent.com/shinriyo/exodus.rs/master/bin/exodus
+
+## tar.gz作成
+`tar -zcv --exclude='.git' --exclude='.gitignore' --exclude='.idea' --exclude='target' --exclude='.DS_Store' --exclude='assets' -f exodus-0.1.tar.gz exodus`
