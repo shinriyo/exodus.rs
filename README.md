@@ -32,19 +32,24 @@ exodus init
 ```
 exodus generate item name:string price:integer description:text
 ```
-gもOK
+`g`コマンドもOKである。
 ```
 exodus g item name:string price:integer description:text
 ```
 
-## テーブル生成
-```
+## テーブル初期化
 
+現状は`localhost:6767/setup/item`へアクセスするだけ。
+TODO:
+```
+exodus migrate item
 ```
 
 ## テーブル削除
-```
 
+TODO:
+```
+exodus delete item
 ```
 
 

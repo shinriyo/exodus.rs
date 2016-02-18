@@ -63,7 +63,9 @@ fn main() {
     let mut command_name = "g".to_string();
 
     // ハッシュ
-    let mut map = HashMap::new();
+//    let mut map = HashMap::new();
+    let mut column_stack = Vec::new();
+    let mut type_stack = Vec::new();
     /*
     map.insert("title", "string");
     map.insert("release_year", "integer");
@@ -222,7 +224,9 @@ hyper = "*"
             }
 
 //            println!("{}", d[0]);
-            map.insert(d[0].to_string(), d[1].to_string());
+//            map.insert(d[0].to_string(), d[1].to_string());
+            column_stack.push(d[0].to_string());
+            type_stack.push(d[1].to_string());
         }
 
         arg_idx+=1;
@@ -262,8 +266,10 @@ hyper = "*"
     // key: column name
     // val: type
     // おそらく&&str
-    for (key, val) in &map {
-        let capitalized_key = format!("{}{}", &key[0..1].to_uppercase(), &key[1..key.len()]);
+//    for (key, val) in &map {
+    for column in &column_stack {
+//        let capitalized_key = format!("{}{}", &key[0..1].to_uppercase(), &key[1..key.len()]);
+        let capitalized_column = format!("{}{}", &column[0..1].to_uppercase(), &column[1..column.len()]);
         // _form
         let raw = format!(r#"
 <div class="form-group">
@@ -272,7 +278,7 @@ hyper = "*"
         <input type="text" ng-model="{0}.{1}" class="form-control" id="{1}" placeholder="{0}'s {2}"/>
     </div>
 </div>
-"#, name, key, capitalized_key);
+"#, name, column, capitalized_column);
         form_html_as_str.push(raw);
 
         // hoge-view
@@ -280,11 +286,11 @@ hyper = "*"
     <tr>
         <td>{1} {3}</td>
         <td>{{{{{0}.{2}}}}}</td>
-    </tr>"#, name, capitalized_name, key, capitalized_key);
+    </tr>"#, name, capitalized_name, column, capitalized_column);
         view_html_as_str.push(raw);
 
         let mut comma = ", ";
-        if (map.len() - 1) == idx {
+        if (column_stack.len() - 1) == idx {
             comma = "";
         }
 
@@ -296,7 +302,8 @@ hyper = "*"
         // json to obj用サポート
         let support;
 
-        let scaffoding_val = format!("{}", val);
+//        let scaffoding_val = format!("{}", val);
+        let scaffoding_val = type_stack.pop().unwrap();
 
         match (string_to_static_str(scaffoding_val)) {
             "bool" => {
@@ -322,31 +329,31 @@ hyper = "*"
         }
 
         let raw = format!("{0} {1} NOT NULL{2}",
-            key, val_type, comma);
+        column, val_type, comma);
         create_table_as_str.push(raw);
 
         let raw = format!("${0}{1}", idx+1, comma);
         create_table_val_as_str.push(raw);
 
         // SELECT
-        let raw = format!("{0}{1}", key, comma);
+        let raw = format!("{0}{1}", column, comma);
         select_table_str.push(raw);
 
         // UPDATE
-        let raw = format!("{0}=${1}{2}", key, idx+1, comma);
+        let raw = format!("{0}=${1}{2}", column, idx+1, comma);
         update_sql_as_str.push(raw);
 
         // sql用のparam
-        let raw = format!("{0}: row.get({1}){2}", key, idx+1, comma);
+        let raw = format!("{0}: row.get({1}){2}", column, idx+1, comma);
         params_sql_as_str.push(raw);
 
         // struct
-        let raw = format!("{0}: {1}{2}", key, rest_type, comma);
+        let raw = format!("{0}: {1}{2}", column, rest_type, comma);
         struct_as_str.push(raw);
 
         // json to obj
         // TODO:
-        let raw = format!("&{0}.{1}{2}{3}", name, key, support, comma);
+        let raw = format!("&{0}.{1}{2}{3}", name, column, support, comma);
         json_to_obj_as_str.push(raw);
     /*
         &movie.title.to_string(),
@@ -372,7 +379,7 @@ hyper = "*"
 
     // UPDATE
     let update_sql = format!("UPDATE {1} SET {0} WHERE id = ${2}", update_sql_as_str.iter().cloned().collect::<String>(),
-        name, map.len() + 1);
+        name, column_stack.len() + 1);
 
     // SQLのparams
     let sql_params = format!("_id: row.get(0), {}", params_sql_as_str.iter().cloned().collect::<String>());
